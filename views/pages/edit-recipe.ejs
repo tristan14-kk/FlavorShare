@@ -1,0 +1,96 @@
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <div class="form-container">
+    <h1>Edit Recipe</h1>
+
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+      <div class="alert alert-error">
+        <% errors.forEach(error => { %>
+          <p><%= error.msg %></p>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <form action="/recipes/<%= recipe._id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="recipe-form">
+      <div class="form-section">
+        <h2>Basic Info</h2>
+        
+        <div class="form-group">
+          <label for="title">Recipe Title *</label>
+          <input type="text" id="title" name="title" value="<%= recipe.title %>" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea id="description" name="description" rows="3" required><%= recipe.description %></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" name="category" required>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat %>" <%= recipe.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cookingTime">Cooking Time *</label>
+            <input type="text" id="cookingTime" name="cookingTime" placeholder="e.g., 30 mins or 1 hr 30 mins" value="<%= recipe.cookingTime %>" required>
+          </div>
+
+          <div class="form-group">
+            <label for="servings">Servings *</label>
+            <input type="text" id="servings" name="servings" placeholder="e.g., 4 servings" value="<%= recipe.servings %>" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Recipe Image</h2>
+        <div class="form-group">
+          <label>Current Image</label>
+          <img src="<%= recipe.image %>" alt="Current recipe image" class="current-image" onerror="this.src='/images/default-recipe.svg'">
+          <label for="image">Upload New Image (optional)</label>
+          <input type="file" id="image" name="image" accept="image/*" class="file-input">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Ingredients</h2>
+        <div id="ingredients-container">
+          <% recipe.ingredients.forEach(ingredient => { %>
+            <div class="dynamic-input">
+              <input type="text" name="ingredients" value="<%= ingredient %>">
+              <button type="button" class="btn-remove" onclick="window.removeInput(this)">×</button>
+            </div>
+          <% }) %>
+        </div>
+        <button type="button" class="btn btn-outline btn-small" onclick="window.addIngredient()">+ Add Ingredient</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Instructions</h2>
+        <div id="instructions-container">
+          <% recipe.instructions.forEach(instruction => { %>
+            <div class="dynamic-input">
+              <textarea name="instructions" rows="2"><%= instruction %></textarea>
+              <button type="button" class="btn-remove" onclick="window.removeInput(this)">×</button>
+            </div>
+          <% }) %>
+        </div>
+        <button type="button" class="btn btn-outline btn-small" onclick="window.addInstruction()">+ Add Step</button>
+      </div>
+
+      <div class="form-actions">
+        <a href="/recipes/<%= recipe._id %>" class="btn btn-outline">Cancel</a>
+        <button type="submit" name="status" value="draft" class="btn btn-outline">Save as Draft</button>
+        <button type="submit" name="status" value="published" class="btn btn-primary">Update Recipe</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

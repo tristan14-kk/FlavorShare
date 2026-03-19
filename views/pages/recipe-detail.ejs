@@ -1,0 +1,85 @@
+<%- include('../partials/header') %>
+
+<div class="recipe-detail-page">
+  <div class="recipe-header">
+    <div class="recipe-header-image">
+      <img src="<%= recipe.image %>" alt="<%= recipe.title %>" onerror="this.src='/images/default-recipe.svg'">
+    </div>
+    <div class="recipe-header-content">
+      <span class="recipe-category-badge"><%= recipe.category %></span>
+      <h1><%= recipe.title %></h1>
+      <p class="recipe-description"><%= recipe.description %></p>
+      
+      <div class="recipe-author-info">
+        <div class="author-avatar-large">
+          <% if (recipe.author.profileImage) { %>
+            <img src="<%= recipe.author.profileImage %>" alt="<%= recipe.author.fullName %>">
+          <% } else { %>
+            <span><%= recipe.author.fullName.charAt(0) %></span>
+          <% } %>
+        </div>
+        <div class="author-details">
+          <span class="author-name"><%= recipe.author.fullName %></span>
+          <span class="author-username">@<%= recipe.author.username %></span>
+        </div>
+      </div>
+
+      <div class="recipe-stats-bar">
+        <div class="stat">
+          <span class="stat-icon">⏱️</span>
+          <span class="stat-value"><%= recipe.cookingTime %></span>
+          <span class="stat-label">Cook Time</span>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">🍽️</span>
+          <span class="stat-value"><%= recipe.servings %></span>
+          <span class="stat-label">Servings</span>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">👁️</span>
+          <span class="stat-value"><%= recipe.views %></span>
+          <span class="stat-label">Views</span>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-value"><%= recipe.averageRating || '0' %></span>
+          <span class="stat-label">Rating</span>
+        </div>
+      </div>
+
+      <% if (isAuthor || (typeof isAdmin !== 'undefined' && isAdmin)) { %>
+        <div class="recipe-actions">
+          <a href="/recipes/<%= recipe._id %>/edit" class="btn btn-outline">Edit Recipe</a>
+          <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this recipe?')">
+            <button type="submit" class="btn btn-danger">Delete Recipe</button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="recipe-body">
+    <div class="recipe-section">
+      <h2>Ingredients</h2>
+      <ul class="ingredients-list">
+        <% recipe.ingredients.forEach(ingredient => { %>
+          <li><%= ingredient %></li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <div class="recipe-section">
+      <h2>Instructions</h2>
+      <ol class="instructions-list">
+        <% recipe.instructions.forEach((instruction, index) => { %>
+          <li>
+            <span class="step-number"><%= index + 1 %></span>
+            <p><%= instruction %></p>
+          </li>
+        <% }) %>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

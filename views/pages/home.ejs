@@ -1,0 +1,64 @@
+<%- include('../partials/header') %>
+
+<div class="home-page">
+  <div class="home-header">
+    <h1>Discover Recipes</h1>
+    <p>Explore delicious recipes from our community</p>
+  </div>
+
+  <div class="search-filter-container">
+    <form action="/home" method="GET" class="search-form">
+      <input 
+        type="text" 
+        name="search" 
+        placeholder="Search recipes..." 
+        value="<%= search %>"
+        class="search-input"
+      >
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="category-filters">
+      <a href="/home" class="category-pill <%= currentCategory === 'all' ? 'active' : '' %>">All Recipes</a>
+      <% categories.forEach(cat => { %>
+        <a href="/home?category=<%= cat %>" class="category-pill <%= currentCategory === cat ? 'active' : '' %>"><%= cat %></a>
+      <% }) %>
+    </div>
+  </div>
+
+  <% if (recipes.length === 0) { %>
+    <div class="empty-state">
+      <span class="empty-icon">🍽️</span>
+      <h3>No recipes found</h3>
+      <p>Be the first to share a recipe!</p>
+      <a href="/recipes/new" class="btn btn-primary">Create Recipe</a>
+    </div>
+  <% } else { %>
+    <div class="recipes-grid">
+      <% recipes.forEach(recipe => { %>
+        <a href="/recipes/<%= recipe._id %>" class="recipe-card">
+          <div class="recipe-image">
+            <img src="<%= recipe.image %>" alt="<%= recipe.title %>" onerror="this.src='/images/default-recipe.svg'">
+            <span class="recipe-category"><%= recipe.category %></span>
+          </div>
+          <div class="recipe-content">
+            <h3 class="recipe-title"><%= recipe.title %></h3>
+            <p class="recipe-description"><%= recipe.description.substring(0, 80) %>...</p>
+            <div class="recipe-meta">
+              <div class="recipe-author">
+                <span class="author-avatar"><%= recipe.author.fullName ? recipe.author.fullName.charAt(0) : '?' %></span>
+                <span class="author-name"><%= recipe.author.fullName %></span>
+              </div>
+              <div class="recipe-stats">
+                <span>⏱️ <%= recipe.cookingTime %></span>
+                <span>👁️ <%= recipe.views %></span>
+              </div>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

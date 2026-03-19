@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <div class="form-container form-container-narrow">
+    <h1>Edit Profile</h1>
+
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+      <div class="alert alert-error">
+        <% errors.forEach(error => { %>
+          <p><%= error.msg %></p>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <form action="/profile?_method=PUT" method="POST" class="profile-form">
+      <div class="form-section">
+        <h2>Basic Info</h2>
+        
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input type="text" id="fullName" name="fullName" value="<%= profileUser.fullName %>" required>
+        </div>
+
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <input type="text" id="username" name="username" value="<%= profileUser.username %>" required minlength="3">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>About</h2>
+        
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" rows="3" maxlength="200" placeholder="Tell us about yourself..."><%= profileUser.bio %></textarea>
+          <small>Max 200 characters</small>
+        </div>
+
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" value="<%= profileUser.location %>" placeholder="City, Country">
+        </div>
+
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input type="url" id="website" name="website" value="<%= profileUser.website %>" placeholder="https://...">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Privacy</h2>
+        
+        <div class="form-group">
+          <label for="profileVisibility">Profile Visibility</label>
+          <select id="profileVisibility" name="profileVisibility">
+            <option value="public" <%= profileUser.profileVisibility === 'public' ? 'selected' : '' %>>Public</option>
+            <option value="private" <%= profileUser.profileVisibility === 'private' ? 'selected' : '' %>>Private</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="/profile" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+
+    <div class="form-section danger-zone">
+      <h2>Account Settings</h2>
+      <a href="/profile/change-password" class="btn btn-outline">Change Password</a>
+      <form action="/profile?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">
+        <button type="submit" class="btn btn-danger">Delete Account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

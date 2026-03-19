@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="profile-avatar-large">
+      <% if (profileUser.profileImage) { %>
+        <img src="<%= profileUser.profileImage %>" alt="<%= profileUser.fullName %>">
+      <% } else { %>
+        <span><%= profileUser.initials %></span>
+      <% } %>
+    </div>
+    <div class="profile-info">
+      <h1><%= profileUser.fullName %></h1>
+      <p class="profile-username">@<%= profileUser.username %></p>
+      <% if (profileUser.bio) { %>
+        <p class="profile-bio"><%= profileUser.bio %></p>
+      <% } %>
+      <% if (profileUser.location) { %>
+        <p class="profile-location">📍 <%= profileUser.location %></p>
+      <% } %>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <span class="stat-value"><%= stats.recipes %></span>
+        <span class="stat-label">Recipes</span>
+      </div>
+      <div class="profile-stat">
+        <span class="stat-value"><%= stats.views %></span>
+        <span class="stat-label">Views</span>
+      </div>
+      <div class="profile-stat">
+        <span class="stat-value"><%= stats.daysJoined %></span>
+        <span class="stat-label">Days</span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <a href="/profile/edit" class="btn btn-outline">Edit Profile</a>
+      <a href="/recipes/new" class="btn btn-primary">New Recipe</a>
+    </div>
+  </div>
+
+  <div class="profile-tabs">
+    <a href="/profile" class="profile-tab <%= currentTab === 'recipes' ? 'active' : '' %>">My Recipes</a>
+    <a href="/profile?tab=drafts" class="profile-tab <%= currentTab === 'drafts' ? 'active' : '' %>">Drafts</a>
+  </div>
+
+  <% if (recipes.length === 0) { %>
+    <div class="empty-state">
+      <span class="empty-icon">📝</span>
+      <h3>No <%= currentTab === 'drafts' ? 'drafts' : 'recipes' %> yet</h3>
+      <p><%= currentTab === 'drafts' ? 'Your draft recipes will appear here' : 'Start sharing your culinary creations!' %></p>
+      <a href="/recipes/new" class="btn btn-primary">Create Recipe</a>
+    </div>
+  <% } else { %>
+    <div class="recipes-grid">
+      <% recipes.forEach(recipe => { %>
+        <a href="/recipes/<%= recipe._id %>" class="recipe-card">
+          <div class="recipe-image">
+            <img src="<%= recipe.image %>" alt="<%= recipe.title %>" onerror="this.src='/images/default-recipe.svg'">
+            <span class="recipe-category"><%= recipe.category %></span>
+            <% if (recipe.status === 'draft') { %>
+              <span class="draft-badge">Draft</span>
+            <% } %>
+          </div>
+          <div class="recipe-content">
+            <h3 class="recipe-title"><%= recipe.title %></h3>
+            <p class="recipe-description"><%= recipe.description.substring(0, 60) %>...</p>
+            <div class="recipe-stats">
+              <span>⏱️ <%= recipe.cookingTime %></span>
+              <span>👁️ <%= recipe.views %></span>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
